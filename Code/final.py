@@ -1,7 +1,7 @@
 import cv2, pickle
 import numpy as np
 import tensorflow as tf
-from cnn_tf import cnn_model_fn
+#from cnn_tf import cnn_model_fn
 import os
 import sqlite3, pyttsx3
 from keras.models import load_model
@@ -208,9 +208,9 @@ def calculator_mode(cam):
 			count_clear_frames = 0
 
 		blackboard = np.zeros((480, 640, 3), dtype=np.uint8)
-		cv2.putText(blackboard, "Calculator Mode", (100, 50), cv2.FONT_HERSHEY_TRIPLEX, 1.5, (255, 0,0))
-		cv2.putText(blackboard, "Predicted text- " + pred_text, (30, 100), cv2.FONT_HERSHEY_TRIPLEX, 1, (255, 255, 0))
-		cv2.putText(blackboard, "Operator " + operator, (30, 140), cv2.FONT_HERSHEY_TRIPLEX, 1, (255, 255, 127))
+		cv2.putText(blackboard, "Calculator Mode", (100, 50), cv2.FONT_HERSHEY_TRIPLEX, 1.5, (255, 130,0))
+		cv2.putText(blackboard, "Translation " + pred_text, (30, 100), cv2.FONT_HERSHEY_TRIPLEX, 1, (255, 155, 0))
+		cv2.putText(blackboard, "Operator " + operator, (30, 140), cv2.FONT_HERSHEY_TRIPLEX, 1, (55, 255, 127))
 		cv2.putText(blackboard, calc_text, (30, 240), cv2.FONT_HERSHEY_TRIPLEX, 2, (255, 255, 255))
 		cv2.putText(blackboard, info, (30, 440), cv2.FONT_HERSHEY_TRIPLEX, 1, (0, 255, 255) )
 		if is_voice_on:
