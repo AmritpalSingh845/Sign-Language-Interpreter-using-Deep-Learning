@@ -278,8 +278,8 @@ def text_mode(cam):
 			text = ""
 			word = ""
 		blackboard = np.zeros((480, 640, 3), dtype=np.uint8)
-		cv2.putText(blackboard, " ", (180, 50), cv2.FONT_HERSHEY_TRIPLEX, 1.5, (255, 0,0))
-		cv2.putText(blackboard, "Predicted text- " + text, (30, 100), cv2.FONT_HERSHEY_TRIPLEX, 1, (255, 255, 0))
+		cv2.putText(blackboard, " ", (180, 50), cv2.FONT_HERSHEY_TRIPLEX, 1.5, (0, 0, 255))
+		cv2.putText(blackboard, "Interpreted Text: " + text, (30, 100), cv2.FONT_HERSHEY_TRIPLEX, 1, (0, 255, 0))
 		cv2.putText(blackboard, word, (30, 240), cv2.FONT_HERSHEY_TRIPLEX, 2, (255, 255, 255))
 		if is_voice_on:
 			cv2.putText(blackboard, " ", (450, 440), cv2.FONT_HERSHEY_TRIPLEX, 1, (255, 127, 0))
@@ -288,7 +288,7 @@ def text_mode(cam):
 		cv2.rectangle(img, (x,y), (x+w, y+h), (0,255,0), 2)
 		res = np.hstack((img, blackboard))
 		cv2.imshow("Recognizing gesture", res)
-		cv2.imshow("thresh", thresh)
+		cv2.imshow("Thresh", thresh)
 		keypress = cv2.waitKey(1)
 		if keypress == ord('q') or keypress == ord('c'):
 			break
