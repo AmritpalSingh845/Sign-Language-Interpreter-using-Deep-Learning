@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 import pickle
+import my_vars
 
 def build_squares(img):
 	x, y, w, h = 420, 140, 10, 10
@@ -14,7 +15,7 @@ def build_squares(img):
 			else:
 				imgCrop = np.hstack((imgCrop, img[y:y+h, x:x+w]))
 			#print(imgCrop.shape)
-			cv2.rectangle(img, (x,y), (x+w, y+h), (0,255,0), 1)
+			cv2.rectangle(img, (x,y), (x+w, y+h), (0,0,0), 1)
 			x+=w+d
 		if np.any(crop == None):
 			crop = imgCrop
@@ -26,13 +27,13 @@ def build_squares(img):
 	return crop
 
 def get_hand_hist():
-	cam = cv2.VideoCapture(1)
+	cam = cv2.VideoCapture(my_vars.mycam)
 	if cam.read()[0]==False:
 		cam = cv2.VideoCapture(0)
 	x, y, w, h = 300, 100, 300, 300
 	flagPressedC, flagPressedS = False, False
 	imgCrop = None
-	while True:
+	while True:	
 		img = cam.read()[1]
 		img = cv2.flip(img, 1)
 		img = cv2.resize(img, (640, 480))
@@ -54,7 +55,7 @@ def get_hand_hist():
 			cv2.filter2D(dst,-1,disc,dst)
 			blur = cv2.GaussianBlur(dst, (11,11), 0)
 			blur = cv2.medianBlur(blur, 15)
-			ret,thresh = cv2.threshold(blur,0,255,cv2.THRESH_BINARY+cv2.THRESH_OTSU)
+			ret,thresh = cv2.threshold(blur,0,255,cv2.THRESH_BINARY | cv2.THRESH_OTSU)
 			thresh = cv2.merge((thresh,thresh,thresh))
 			#cv2.imshow("res", res)
 			cv2.imshow("Thresh", thresh)

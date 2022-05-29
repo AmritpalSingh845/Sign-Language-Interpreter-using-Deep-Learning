@@ -6,6 +6,7 @@ import os
 import sqlite3, pyttsx3
 from keras.models import load_model
 from threading import Thread
+import my_vars
 
 engine = pyttsx3.init()
 engine.setProperty('rate', 150)
@@ -208,15 +209,15 @@ def calculator_mode(cam):
 			count_clear_frames = 0
 
 		blackboard = np.zeros((480, 640, 3), dtype=np.uint8)
-		cv2.putText(blackboard, "Calculator Mode", (100, 50), cv2.FONT_HERSHEY_TRIPLEX, 1.5, (255, 130,0))
-		cv2.putText(blackboard, "Translation " + pred_text, (30, 100), cv2.FONT_HERSHEY_TRIPLEX, 1, (255, 155, 0))
-		cv2.putText(blackboard, "Operator " + operator, (30, 140), cv2.FONT_HERSHEY_TRIPLEX, 1, (55, 255, 127))
-		cv2.putText(blackboard, calc_text, (30, 240), cv2.FONT_HERSHEY_TRIPLEX, 2, (255, 255, 255))
-		cv2.putText(blackboard, info, (30, 440), cv2.FONT_HERSHEY_TRIPLEX, 1, (0, 255, 255) )
+		cv2.putText(blackboard, "Calculator Mode", (100, 50), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (255, 130,0))
+		cv2.putText(blackboard, "Translation " + pred_text, (30, 100), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 155, 0))
+		cv2.putText(blackboard, "Operator " + operator, (30, 140), cv2.FONT_HERSHEY_SIMPLEX, 1, (55, 255, 127))
+		cv2.putText(blackboard, calc_text, (30, 240), cv2.FONT_HERSHEY_SIMPLEX, 2, (255, 255, 255))
+		cv2.putText(blackboard, info, (30, 440), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 255) )
 		if is_voice_on:
-			cv2.putText(blackboard, " ", (450, 440), cv2.FONT_HERSHEY_TRIPLEX, 1, (255, 127, 0))
+			cv2.putText(blackboard, " ", (450, 440), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 127, 0))
 		else:
-			cv2.putText(blackboard, " ", (450, 440), cv2.FONT_HERSHEY_TRIPLEX, 1, (255, 127, 0))
+			cv2.putText(blackboard, " ", (450, 440), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 127, 0))
 		cv2.rectangle(img, (x,y), (x+w, y+h), (0,255,0), 2)
 		res = np.hstack((img, blackboard))
 		cv2.imshow("Recognizing gesture", res)
@@ -265,28 +266,22 @@ def text_mode(cam):
 
 			elif cv2.contourArea(contour) < 1000:
 				if word != '':
-					#print('yolo')
-					#say_text(text)
 					Thread(target=say_text, args=(word, )).start()
 				text = ""
 				word = ""
 		else:
 			if word != '':
-				#print('yolo1')
-				#say_text(text)
 				Thread(target=say_text, args=(word, )).start()
 			text = ""
 			word = ""
 		blackboard = np.zeros((480, 640, 3), dtype=np.uint8)
-		cv2.putText(blackboard, " ", (180, 50), cv2.FONT_HERSHEY_TRIPLEX, 1.5, (0, 0, 255))
-		cv2.putText(blackboard, "Interpreted Text: " + text, (30, 100), cv2.FONT_HERSHEY_TRIPLEX, 1, (0, 255, 0))
-		cv2.putText(blackboard, word, (30, 240), cv2.FONT_HERSHEY_TRIPLEX, 2, (255, 255, 255))
-		if is_voice_on:
-			cv2.putText(blackboard, " ", (450, 440), cv2.FONT_HERSHEY_TRIPLEX, 1, (255, 127, 0))
-		else:
-			cv2.putText(blackboard, " ", (450, 440), cv2.FONT_HERSHEY_TRIPLEX, 1, (255, 127, 0))
+		cv2.putText(blackboard, "GA7 Sign Language Interpreter", (20, 50), cv2.FONT_HERSHEY_SIMPLEX, 1.2, (255, 255, 255))
+		cv2.putText(blackboard, "Interpreted Text: ", (30, 100), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0))
+		cv2.putText(blackboard, text, (30, 150), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0))
+		cv2.putText(blackboard, word, (30, 290), cv2.FONT_HERSHEY_SIMPLEX, 2, (255, 255, 255))
+
 		cv2.rectangle(img, (x,y), (x+w, y+h), (0,255,0), 2)
-		res = np.hstack((img, blackboard))
+		res = np.vstack((blackboard, img))
 		cv2.imshow("Recognizing gesture", res)
 		cv2.imshow("Thresh", thresh)
 		keypress = cv2.waitKey(1)
@@ -303,12 +298,10 @@ def text_mode(cam):
 		return 0
 
 def recognize():
-	cam = cv2.VideoCapture(1)
+	cam = cv2.VideoCapture(my_vars.mycam)
 	if cam.read()[0]==False:
 		cam = cv2.VideoCapture(0)
-	text = ""
-	word = ""
-	count_same_frame = 0
+
 	keypress = 1
 	while True:
 		if keypress == 1:

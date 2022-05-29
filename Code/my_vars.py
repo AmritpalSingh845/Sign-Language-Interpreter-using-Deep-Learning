@@ -1,0 +1,1 @@
+mycam = 1  # 0 for phone, 1 for laptop cam

@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 import pickle, os, sqlite3, random
+import my_vars
 
 image_x, image_y = 50, 50
 
@@ -29,7 +30,7 @@ def store_in_db(g_id, g_name):
 	try:
 		conn.execute(cmd)
 	except sqlite3.IntegrityError:
-		choice = input("g_id already exists. Want to change the record? (y/n): ")
+		choice = 'y' #input("g_id already exists. Want to change the record? (y/n): ")
 		if choice.lower() == 'y':
 			cmd = "UPDATE gesture SET g_name = \'%s\' WHERE g_id = %s" % (g_name, g_id)
 			conn.execute(cmd)
@@ -41,7 +42,7 @@ def store_in_db(g_id, g_name):
 def store_images(g_id):
 	total_pics = 1200
 	hist = get_hand_hist()
-	cam = cv2.VideoCapture(1)
+	cam = cv2.VideoCapture(my_vars.mycam)
 	if cam.read()[0]==False:
 		cam = cv2.VideoCapture(0)
 	x, y, w, h = 300, 100, 300, 300
@@ -81,11 +82,11 @@ def store_images(g_id):
 				rand = random.randint(0, 10)
 				if rand % 2 == 0:
 					save_img = cv2.flip(save_img, 1)
-				cv2.putText(img, "Capturing...", (30, 60), cv2.FONT_HERSHEY_TRIPLEX, 2, (127, 255, 255))
+				cv2.putText(img, "Recording...", (30, 60), cv2.FONT_HERSHEY_SIMPLEX, 2, (0, 255, 0))
 				cv2.imwrite("gestures/"+str(g_id)+"/"+str(pic_no)+".jpg", save_img)
 
 		cv2.rectangle(img, (x,y), (x+w, y+h), (0,255,0), 2)
-		cv2.putText(img, str(pic_no), (30, 400), cv2.FONT_HERSHEY_TRIPLEX, 1.5, (127, 127, 255))
+		cv2.putText(img, str(pic_no), (30, 400), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (0, 255, 0))
 		cv2.imshow("Capturing gesture", img)
 		cv2.imshow("thresh", thresh)
 		keypress = cv2.waitKey(1)
@@ -100,8 +101,16 @@ def store_images(g_id):
 		if pic_no == total_pics:
 			break
 
-init_create_folder_database()
-g_id = input("Enter gesture no.: ")
-g_name = input("Enter gesture name/text: ")
-store_in_db(g_id, g_name)
-store_images(g_id)
+def main_fun(g_id,g_name):
+	init_create_folder_database()
+	# g_id = input("Enter gesture no.: ")
+	# g_name = input("Enter gesture name/text: ")
+	store_in_db(g_id, g_name)
+	store_images(g_id)
+	
+
+# init_create_folder_database()
+# g_id = input("Enter gesture no.: ")
+# g_name = input("Enter gesture name/text: ")
+# store_in_db(g_id, g_name)
+# store_images(g_id)
